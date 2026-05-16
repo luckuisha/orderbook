@@ -1,0 +1,27 @@
+# Build output
+main
+main.exe
+*.o
+*.obj
+*.out
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.exe
+
+# Debug symbols
+*.dSYM/
+*.pdb
+*.ilk
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
