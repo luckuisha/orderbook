@@ -1,4 +1,6 @@
 #include <vector>
+
+#include "order_result.h"
 #include "order.h"
 
 class OrderBook {
@@ -8,7 +10,7 @@ public:
 
     // Returns true if order was executed
     // Returns false if order is added to the vector
-    bool process_order(const Order& order); 
+    OrderResult process_order(const Order& order); 
 
     // displays the current orderbook
     void display_order();

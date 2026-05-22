@@ -23,6 +23,7 @@ public:
     uint32_t quantity() const { return quantity_; }
     void quantity(uint32_t quantity) { quantity_ = quantity; }
     void reduce_quantity(uint32_t quantity) { quantity_ -= quantity; }
+    void increase_quantity(uint32_t quantity) { quantity_ += quantity; }
 
     Type type() const { return type_; }
 
