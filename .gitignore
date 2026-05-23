@@ -1,6 +1,5 @@
 # Build output
-main
-main.exe
+build/
 *.o
 *.obj
 *.out
