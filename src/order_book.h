@@ -12,6 +12,9 @@ public:
     // Returns false if order is added to the vector
     OrderResult process_order(const Order& order); 
 
+    // Returns total quantity at a price_cents point
+    uint32_t quanitity_at_price(double price, Order::Side side);
+
     // displays the current orderbook
     void display_order();
 

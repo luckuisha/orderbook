@@ -10,15 +10,12 @@ public:
         MARKET, LIMIT, 
     };
 
-    Order(double price, int quantity, Type type, Side side)
-        : price_(static_cast<uint64_t>(price * 100)), quantity_(quantity), type_(type), side_(side) {}
+    Order(double price_cents, int quantity, Type type, Side side)
+        : price_(static_cast<uint64_t>(price_cents * 100)), quantity_(quantity), type_(type), side_(side) {}
 
-    Order(uint64_t price, int quantity, Type type, Side side)
-        : price_(price), quantity_(quantity), type_(type), side_(side) {}
+    uint64_t price_cents() const { return price_; }
 
-    uint64_t price() const { return price_; }
-
-    double human_price() const { return price_ / 100.0; }
+    double price() const { return price_ / 100.0; }
 
     uint32_t quantity() const { return quantity_; }
     void quantity(uint32_t quantity) { quantity_ = quantity; }
