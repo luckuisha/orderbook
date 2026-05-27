@@ -1,4 +1,8 @@
 #include <algorithm>
+#include <format>
+#include <iostream>
+#include <ranges>
+#include <string>
 
 #include "order_book.h"
 
@@ -99,7 +103,53 @@ uint32_t OrderBook::quanitity_at_price(double price, Order::Side side) {
     return quantity;
 }
 
-void OrderBook::display_order() {
-    return;
+void OrderBook::display_order() const {
 
+    std::string symbol = "█";
+
+    // start with buys and end with sells, both need to be iterated backwards
+    if (!bids_.empty()){
+        size_t i = 0;
+        while (i < bids_.size()) {
+            const uint64_t level_price = bids_[i].price_cents();
+            uint32_t level_quantity = 0;
+
+            while (i < bids_.size() && bids_[i].price_cents() == level_price) {
+                level_quantity += bids_[i].quantity();
+                ++i;
+            } 
+
+            std::cout << std::format("{:>10.2f} : ", level_price / 100.0);
+            for (uint32_t j = 0; j < (level_quantity + 9) / 10; ++j) {
+                std::cout << symbol;
+            }
+            std::cout << "\n";
+        }
+    }
+
+    if (!bids_.empty() && !asks_.empty()) {
+        uint64_t spread = asks_.back().price_cents() - bids_.back().price_cents();
+        std::cout << std::format("Spread is {:.2f}\n", spread / 100.0);
+    }
+
+    if (!asks_.empty()){
+        int i = asks_.size() - 1;
+        while (i >= 0) {
+            const uint64_t level_price = asks_[i].price_cents();
+            uint32_t level_quantity = 0;
+
+            while (i >= 0 && asks_[i].price_cents() == level_price) {
+                level_quantity += asks_[i].quantity();
+                --i;
+            } 
+
+            std::cout << std::format("{:>10.2f} : ", level_price / 100.0);
+            for (uint32_t j = 0; j < (level_quantity + 9) / 10; ++j) {
+                std::cout << symbol;
+            }
+            std::cout << "\n";
+        }
+    }
+    std::cout << std::endl;
+    return;
 }

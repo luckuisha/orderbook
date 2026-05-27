@@ -16,7 +16,7 @@ public:
     uint32_t quanitity_at_price(double price, Order::Side side);
 
     // displays the current orderbook
-    void display_order();
+    void display_order() const;
 
 private:
     // Use two vectors to store buy and sell orders separately for easier matching and for cache locality
