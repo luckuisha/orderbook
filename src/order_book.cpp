@@ -32,12 +32,14 @@ OrderResult OrderBook::process_order(const Order& order) {
         uint32_t remaining = order.quantity();
         while (remaining > 0 && !opposite_book.empty()) {
             auto& top = opposite_book.back();
+            uint64_t id = top.id();
             if (remaining < top.quantity()) {
                 top.reduce_quantity(remaining);
                 remaining = 0;
             } else {
                 remaining -= top.quantity();
                 opposite_book.pop_back();
+                id_lookup_side_.erase(id);
             }
         }
         uint32_t filled_amount = order.quantity() - remaining;
@@ -54,32 +56,45 @@ OrderResult OrderBook::process_order(const Order& order) {
 
         while (remaining > 0 && !opposite_book.empty() && passes_best_price(price_cents, opposite_book.back().price_cents())) {
             auto& top = opposite_book.back();
+            uint64_t id = top.id();
             if (remaining < top.quantity()) {
                 top.reduce_quantity(remaining);
                 remaining = 0;
             } else {
                 remaining -= top.quantity();
                 opposite_book.pop_back();
+                id_lookup_side_.erase(id);
             }
         }
         uint32_t filled_amount = order.quantity() - remaining;
         if (remaining > 0) {
             Order new_order = order;
-
             new_order.reduce_quantity(filled_amount);
+            uint64_t id = next_id_++;
+            id_lookup_side_[id] = new_order.side();
+            new_order.id(id);
+
             auto it = std::lower_bound(resting_book.begin(), resting_book.end(), price_cents, book_order_cmp);
-            if (it == resting_book.end()) {
-                resting_book.emplace_back(std::move(new_order));
-                if (remaining == order.quantity()) return OrderResult(OrderResult::OrderStatus::Pending, filled_amount);
-                return OrderResult(OrderResult::OrderStatus::PartiallyFilled, filled_amount);
-            }
             resting_book.insert(it, std::move(new_order));
-            if (remaining == order.quantity()) return OrderResult(OrderResult::OrderStatus::Pending, filled_amount);
-            return OrderResult(OrderResult::OrderStatus::PartiallyFilled, filled_amount);
+
+            auto status = (remaining == order.quantity()) ? OrderResult::OrderStatus::Pending : OrderResult::OrderStatus::PartiallyFilled;
+            return OrderResult(status, filled_amount, id);
         } else {
             return OrderResult(OrderResult::OrderStatus::Filled, filled_amount);
         }
     }
+}
+
+OrderResult OrderBook::cancel_order(uint64_t id) {
+    auto it = id_lookup_side_.find(id);
+    if (it == id_lookup_side_.end()) return OrderResult(OrderResult::OrderStatus::Rejected);
+
+    auto& book = (it->second == Order::Side::BUY) ? bids_ : asks_;
+    auto found = std::find_if(book.begin(), book.end(), [id](const Order& o){ return o.id() == id; });
+    if (found == book.end()) return OrderResult(OrderResult::OrderStatus::Rejected);
+    book.erase(found);
+    id_lookup_side_.erase(id);
+    return OrderResult(OrderResult::OrderStatus::Cancelled);
 }
 
 uint32_t OrderBook::quanitity_at_price(double price, Order::Side side) {

@@ -1,3 +1,4 @@
+#include <unordered_map>
 #include <vector>
 
 #include "order_result.h"
@@ -12,6 +13,8 @@ public:
     // Returns false if order is added to the vector
     OrderResult process_order(const Order& order); 
 
+    OrderResult cancel_order(const uint64_t id);
+
     // Returns total quantity at a price_cents point
     uint32_t quanitity_at_price(double price, Order::Side side);
 
@@ -25,5 +28,8 @@ private:
     // books
     std::vector<Order> bids_; // sorted order of buying orders, increasing
     std::vector<Order> asks_; // sorted order of selling orders, decreasing
+
+    uint64_t next_id_ = 1; // 0 means unassigned, keeps incrementing upon order creation
+    std::unordered_map<uint64_t, Order::Side> id_lookup_side_; 
 
 };
