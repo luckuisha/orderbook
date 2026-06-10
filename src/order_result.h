@@ -16,6 +16,7 @@ public:
         : status_(status), filled_quantity_(quantity), order_id_(id) {}
 
     OrderStatus status() const { return status_; }
+    uint64_t order_id() const { return order_id_; }
 
 private:
     OrderStatus status_;
