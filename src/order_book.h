@@ -13,7 +13,9 @@ public:
     // Returns false if order is added to the vector
     OrderResult process_order(const Order& order); 
 
-    OrderResult cancel_order(const uint64_t id);
+    OrderResult cancel_order(uint64_t id);
+
+    OrderResult modify_order(const uint64_t id, double new_price, uint32_t new_quantity);
 
     // Returns total quantity at a price_cents point
     uint32_t quanitity_at_price(double price, Order::Side side);

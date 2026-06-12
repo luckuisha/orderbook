@@ -97,6 +97,31 @@ OrderResult OrderBook::cancel_order(uint64_t id) {
     return OrderResult(OrderResult::OrderStatus::Cancelled);
 }
 
+OrderResult OrderBook::modify_order(uint64_t id, double new_price, uint32_t new_quantity) {
+    auto it = id_lookup_side_.find(id);
+    if (it == id_lookup_side_.end()) return OrderResult(OrderResult::OrderStatus::Rejected);
+
+    auto& book = (it->second == Order::Side::BUY) ? bids_ : asks_;
+    auto found = std::find_if(book.begin(), book.end(), [id](const Order& o){ return o.id() == id; });
+    if (found == book.end()) return OrderResult(OrderResult::OrderStatus::Rejected);
+
+    uint64_t price_cents = static_cast<uint64_t>(new_price * 100);
+    if (found->price_cents() == price_cents && found->quantity() == new_quantity) {
+        return OrderResult(OrderResult::OrderStatus::Rejected);
+    }
+
+    if (found->price_cents() == price_cents && new_quantity < found->quantity()) {
+        found->quantity(new_quantity);
+        return OrderResult(OrderResult::OrderStatus::Pending, new_quantity);
+    }
+
+    book.erase(found);
+    id_lookup_side_.erase(it);
+
+    Order replacemant(price_cents, new_quantity, found->type(), found->side());
+    return process_order(replacemant);
+}
+
 uint32_t OrderBook::quanitity_at_price(double price, Order::Side side) {
     uint64_t price_cents = static_cast<uint64_t>(price * 100);
     auto& resting_book = (side == Order::Side::BUY) ? bids_ : asks_;
