@@ -15,8 +15,17 @@ test:
 		tests/order_book_test.cpp \
 		src/order.cpp \
 		src/order_book.cpp \
-		-o build/test_main
-	./build/test_main
+		-o build/test
+	./build/test
+
+bench:
+	mkdir -p build
+	g++ -std=c++23 -O3 -Isrc -Ibench \
+		bench/main_bench.cpp
+		src/order.cpp \
+		src/order_book.cpp \
+		-o build/bench
+	./build/bench
 
 clean:
 	rm -rf build
