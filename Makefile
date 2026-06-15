@@ -1,4 +1,4 @@
-.PHONY: make test clean
+.PHONY: make test bench clean
 
 all:
 	mkdir -p build
