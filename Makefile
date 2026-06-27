@@ -20,8 +20,8 @@ test:
 
 bench:
 	mkdir -p build
-	g++ -std=c++23 -O3 -Isrc -Ibench \
-		bench/main_bench.cpp
+	g++ -std=c++23 -O3 -DNDEBUG -Isrc -Ibench \
+		bench/bench_main.cpp \
 		src/order.cpp \
 		src/order_book.cpp \
 		-o build/bench

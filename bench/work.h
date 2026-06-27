@@ -8,7 +8,8 @@
 template <typename Orderbook>
 std::vector<uint64_t> benchmark_insert(size_t N) {
     Orderbook book;
-    std::vector<uint64_t> elapsed_times(N);
+    std::vector<uint64_t> elapsed_times;
+    elapsed_times.reserve(N);
 
     std::mt19937_64 rng(67);
     std::normal_distribution<double> bid_dist (99.5, 0.1);
