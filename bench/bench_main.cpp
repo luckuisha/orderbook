@@ -29,10 +29,18 @@ static void report(std::string benchmark_name, std::vector<uint64_t> elapsed) {
     std::cout << std::format("0.99: {} ns", percentile(0.99)) << "\n";
     std::cout << std::format("0.999: {} ns", percentile(0.999)) << "\n";
     std::cout << std::format("0.99999: {} ns", percentile(0.99999)) << "\n";
+    std::cout << std::endl;
 }
 
 int main() {
-    auto test1 = benchmark_insert<OrderBook>(100'000);
-    report("BENCH INSERTION", test1);
+    auto insert = benchmark_insert<OrderBook>(100'000);
+    report("BENCH INSERTION", insert);
+
+    auto cancel = benchmark_cancel<OrderBook>(100'000);
+    report("BENCH CANCEL", cancel);
+
+    auto match = benchmark_match<OrderBook>(100'000);
+    report("BENCH MATCH", cancel);
+
     return 0;
 }
