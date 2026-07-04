@@ -1,8 +1,8 @@
 #include "doctest.h"
-#include "order_book.h"
+#include "vector_order_book.h"
 
-TEST_CASE("Testing the orderbook") {
-    OrderBook book;
+TEST_CASE("Testing the vector orderbook") {
+    VectorOrderBook book;
 
     // Test for `Cancelled` order results
     SUBCASE ("A market buy order when the book is empty") {

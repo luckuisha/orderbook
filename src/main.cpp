@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "order_book.h"
+#include "vector_order_book.h"
 #include "order_result.h"
 
 int main() {
-    OrderBook ob = OrderBook();
+    VectorOrderBook ob = VectorOrderBook();
     Order o = Order(100.12, 1, Order::Type::MARKET, Order::Side::SELL);
 
     OrderResult sold = ob.process_order(o);

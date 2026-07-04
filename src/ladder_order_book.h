@@ -4,10 +4,10 @@
 #include "order_result.h"
 #include "order.h"
 
-class OrderBook {
+class LadderOrderBook {
 public:
 
-    OrderBook() = default;
+    LadderOrderBook() = default;
 
     // Returns true if order was executed
     // Returns false if order is added to the vector

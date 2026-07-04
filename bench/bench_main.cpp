@@ -4,7 +4,7 @@
 #include <numeric>
 #include <string>
 
-#include "order_book.h"
+#include "vector_order_book.h"
 #include "work.h"
 
 static void report(std::string benchmark_name, std::vector<uint64_t> elapsed) {
@@ -33,13 +33,13 @@ static void report(std::string benchmark_name, std::vector<uint64_t> elapsed) {
 }
 
 int main() {
-    auto insert = benchmark_insert<OrderBook>(100'000);
+    auto insert = benchmark_insert<VectorOrderBook>(100'000);
     report("BENCH INSERTION", insert);
 
-    auto cancel = benchmark_cancel<OrderBook>(100'000);
+    auto cancel = benchmark_cancel<VectorOrderBook>(100'000);
     report("BENCH CANCEL", cancel);
 
-    auto match = benchmark_match<OrderBook>(100'000);
+    auto match = benchmark_match<VectorOrderBook>(100'000);
     report("BENCH MATCH", cancel);
 
     return 0;

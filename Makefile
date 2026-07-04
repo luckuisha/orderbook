@@ -5,7 +5,7 @@ all:
 	g++ -std=c++23 -O3 -Isrc \
 	src/main.cpp \
 	src/order.cpp \
-	src/order_book.cpp \
+	src/vector_order_book.cpp \
 	-o build/main
 
 test:
@@ -14,7 +14,7 @@ test:
 		tests/main_test.cpp \
 		tests/order_book_test.cpp \
 		src/order.cpp \
-		src/order_book.cpp \
+		src/vector_order_book.cpp \
 		-o build/test
 	./build/test
 
@@ -23,7 +23,7 @@ bench:
 	g++ -std=c++23 -O3 -DNDEBUG -Isrc -Ibench \
 		bench/bench_main.cpp \
 		src/order.cpp \
-		src/order_book.cpp \
+		src/vector_order_book.cpp \
 		-o build/bench
 	./build/bench
 

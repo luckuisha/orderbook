@@ -4,9 +4,9 @@
 #include <ranges>
 #include <string>
 
-#include "order_book.h"
+#include "ladder_order_book.h"
 
-OrderResult OrderBook::process_order(const Order& order) {
+OrderResult LadderOrderBook::process_order(const Order& order) {
 
     Order::Side side = order.side();
 
@@ -85,7 +85,7 @@ OrderResult OrderBook::process_order(const Order& order) {
     }
 }
 
-OrderResult OrderBook::cancel_order(uint64_t id) {
+OrderResult LadderOrderBook::cancel_order(uint64_t id) {
     auto it = id_lookup_side_.find(id);
     if (it == id_lookup_side_.end()) return OrderResult(OrderResult::OrderStatus::Rejected);
 
@@ -97,7 +97,7 @@ OrderResult OrderBook::cancel_order(uint64_t id) {
     return OrderResult(OrderResult::OrderStatus::Cancelled);
 }
 
-OrderResult OrderBook::modify_order(uint64_t id, double new_price, uint32_t new_quantity) {
+OrderResult LadderOrderBook::modify_order(uint64_t id, double new_price, uint32_t new_quantity) {
     auto it = id_lookup_side_.find(id);
     if (it == id_lookup_side_.end()) return OrderResult(OrderResult::OrderStatus::Rejected);
 
@@ -122,7 +122,7 @@ OrderResult OrderBook::modify_order(uint64_t id, double new_price, uint32_t new_
     return process_order(replacemant);
 }
 
-uint32_t OrderBook::quanitity_at_price(double price, Order::Side side) {
+uint32_t LadderOrderBook::quanitity_at_price(double price, Order::Side side) {
     uint64_t price_cents = static_cast<uint64_t>(price * 100);
     auto& resting_book = (side == Order::Side::BUY) ? bids_ : asks_;
 
@@ -143,7 +143,7 @@ uint32_t OrderBook::quanitity_at_price(double price, Order::Side side) {
     return quantity;
 }
 
-void OrderBook::display_order() const {
+void LadderOrderBook::display_order() const {
 
     std::string symbol = "█";
 
